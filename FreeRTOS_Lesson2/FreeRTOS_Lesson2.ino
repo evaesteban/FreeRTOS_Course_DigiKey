@@ -35,7 +35,6 @@ void toggleLED_2(void* parameter){
 }
 
 void setup() {
-  
   // Configure pin
   pinMode(led_pin, OUTPUT);
 

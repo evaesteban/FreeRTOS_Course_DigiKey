@@ -46,7 +46,6 @@ void startTask2(void *parameter){
 
 // Main: runs as its own task with priority 1 on core 1
 void setup() {
-  
   // Configure Serial slow so we can watch the preemption
   Serial.begin(300);
 
@@ -81,7 +80,6 @@ void setup() {
 }
 
 void loop() {
-  
   // Suspend the higher priority task for some intervals
   for(int i = 0; i < 3; i++){
     vTaskSuspend(task_2);
