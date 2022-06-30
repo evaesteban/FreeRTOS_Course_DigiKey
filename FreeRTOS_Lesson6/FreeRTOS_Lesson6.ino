@@ -22,6 +22,8 @@ void incTask(void *parameters){
 
   int local_var;
 
+  Serial.println("starting");
+
   // Loop forever
   while(1){
 
@@ -42,7 +44,7 @@ void setup() {
   randomSeed(analogRead(0));
 
   // Configure Serial
-  Serial.begin(11520);
+  Serial.begin(115200);
 
   // Wait a moment to start 
   vTaskDelay(1000 / portTICK_PERIOD_MS);
