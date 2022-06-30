@@ -5,6 +5,9 @@
  *  
  */
 
+// Will likely need this in vanilla FreeRTOS
+// #include semphr.h
+
 // Use only 1 core for demo purposes
 #if CONFIG_FREERTOS_UNICORE
   static const BaseType_t app_cpu = 0;
@@ -14,6 +17,7 @@
 
 // Globals
 static int shared_var = 0;
+static SemaphoreHandle_t mutex;
 
 // Tasks
 
@@ -27,14 +31,23 @@ void incTask(void *parameters){
   // Loop forever
   while(1){
 
-    // Roundabout way to do "shared_var++" randomly and poorly
-    local_var = shared_var;
-    local_var++;
-    vTaskDelay(random(100, 500) / portTICK_PERIOD_MS);
-    shared_var = local_var;
+    // Take mutex prior to critical section
+    if(xSemaphoreTake(mutex, 0) == pdTRUE){
 
-    //Print out new shared variable
-    Serial.println(shared_var);
+      // Roundabout way to do "shared_var++" randomly and poorly
+      local_var = shared_var;
+      local_var++;
+      vTaskDelay(random(100, 500) / portTICK_PERIOD_MS);
+      shared_var = local_var;
+
+      // Give mutex after critical section
+      xSemaphoreGive(mutex);
+  
+      //Print out new shared variable
+      Serial.println(shared_var);
+    } else{
+      // Do something else if you can't obtain the mutex
+    }
   }
 }
 
@@ -50,6 +63,9 @@ void setup() {
   vTaskDelay(1000 / portTICK_PERIOD_MS);
   Serial.println();
   Serial.println("---FreeRTOS Race Condition Demo---");
+
+  // Create mutex before starting tasks
+  mutex = xSemaphoreCreateMutex();
 
   // Start task 1
   xTaskCreatePinnedToCore(incTask,
