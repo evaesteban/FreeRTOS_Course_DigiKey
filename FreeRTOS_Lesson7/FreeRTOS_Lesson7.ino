@@ -1,7 +1,7 @@
 /** 
  *  Digi-Key FreeRTOS Course Lesson 7
  *  
- *  Pass a parameter to a task using a semaphore.
+ *  Pass a parameter to a task using a binary semaphore.
  *  
  */
 
